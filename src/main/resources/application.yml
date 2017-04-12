@@ -1,0 +1,87 @@
+spring.h2.console:
+  enabled: true
+  path: /h2-console
+
+spring:
+  mvc:
+    async:
+      request-timeout: -1
+  application:
+    name: defunct-store-api
+  datasource: 
+    initialize: false
+    driverClassName: org.h2.Driver 
+    url: jdbc:h2:file:./db/defunct;AUTO_SERVER=TRUE
+    username: sa
+    password:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    generate-ddl: false
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming: 
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        
+#
+# logging for logback (logback.xml)
+#
+logging:
+  config: classpath:logback-spring.xml
+  path: logs/
+  level:
+    root: INFO
+    org.springframework.core: INFO
+    org.springframework.beans: INFO
+    org.springframework.context: INFO
+    org.springframework.web: INFO
+    org.springframework.data: INFO
+    org.apache.http: INFO
+    org.apache.catalina: INFO
+    org.apache.coyote: INFO
+
+
+#
+# Embedded tomcat configuration
+#
+server:
+  port: 8080
+  use-forward-headers: true
+  tomcat:
+    basedir: tomcat-instance
+    
+    accesslog:
+      directory: logs
+      prefix: access_log
+      rename-on-rotate: false
+      suffix: .log
+      enabled: true
+      pattern: '%h %l %u [%t] "%r" %s %b (%D ms)'
+    remote-ip-header: X-Forwarded-For
+    uri-encoding: UTF-8
+    
+
+  #
+  # This is the custom configuration of Embedded tomcat
+  #
+  tomcat-connector-property:
+    http:
+      maxThreads: 250
+      connectionTimeout: 600000
+      asyncTimeout: 600000
+      acceptCount: 100
+      maxConnections: 12888
+      enableLookups: false
+    ajp:
+      protocol: org.apache.coyote.ajp.AjpNio2Protocol
+      port: 8090
+      maxThreads: 512
+      connectionTimeout: 600000
+      asyncTimeout: 600000
+      acceptCount: 100
+      maxConnections: 12888
+      enableLookups: false
+      uri-encoding: UTF-8

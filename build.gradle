@@ -1,0 +1,189 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.3.RELEASE'
+		asciidoctorVersion = '1.5.3'
+		springCDCVerifierVersion = '1.0.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath group: 'org.asciidoctor', name: 'asciidoctor-gradle-plugin', version: asciidoctorVersion
+		classpath group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.0-alpha.11'
+	}
+}
+
+group = 'boo'
+version = '0.0.1-SNAPSHOT'
+
+
+description = "defunct-store-api"
+
+
+apply plugin: 'maven'
+apply plugin: 'java' 
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'distribution'
+apply plugin: 'maven-publish'
+
+
+ext {
+	springfoxVersion = '2.6.1'
+	springRestDocVersion = '1.1.2.RELEASE'
+	springCDCVerifierVersion = '1.0.1.RELEASE'
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+	baseName = 'defunct-store-api'
+	version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+	compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+	compile("org.springframework:spring-jdbc")
+	compile group: 'com.h2database', name: 'h2'
+	
+	compile 'com.querydsl:querydsl-apt:4.1.4'
+    compile 'com.querydsl:querydsl-jpa:4.1.4'
+    compile 'org.modelmapper:modelmapper:0.7.5'
+    
+	
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: springfoxVersion
+    compile group: 'io.springfox', name: 'springfox-staticdocs', version: springfoxVersion
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfoxVersion
+    compile group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: springRestDocVersion
+	
+	compile group: 'commons-io', name: 'commons-io', version:'2.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.5'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version:'4.1'
+    compile group: 'com.google.guava', name: 'guava', version:'21.0'
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5') {
+		exclude(module: 'commons-logging')
+    }
+    compileOnly('org.projectlombok:lombok')
+}
+springBoot {
+	mainClass = 'defunct.store.Application'
+    executable = true
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java', 'src/main/generated'
+        }
+    }
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    file(new File(projectDir, "/src/main/generated")).deleteDir()
+    file(new File(projectDir, "/src/main/generated")).mkdirs()
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.compileOnly
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+    ]
+    destinationDir = file('src/main/generated')
+}
+
+compileJava {
+    dependsOn generateQueryDSL
+}
+
+clean.doLast {
+    file(new File(projectDir, "/src/main/generated")).deleteDir()
+}
+
+
+ext {
+	sourceDocDir = file('src/docs')
+    generatedAsciidoc = file('build/docs/asciidoc/generated')
+    generatedDoc = file('build/docs')
+    
+    restSourceDocDir = file('src/docs/restdoc')
+    restDocSnippetsDir = file('build/generated-snippets')
+    restDocGeneratedDir = file('build/restdocs')
+}
+
+asciidoctor {
+	dependsOn test
+	if ( restDocSnippetsDir == null ) {
+		sourceDir = sourceDocDir
+		sources {
+			include 'index.adoc'
+		}
+		backends = [ 'html5', 'pdf' ]
+		attributes = [
+			doctype: 'book',
+			toc: 'left',
+			toclevels: '2',
+			numbered: '',
+			sectlinks: '',
+			sectanchors: '',
+			hardbreaks: '',
+			generated: generatedAsciidoc
+	    ]
+		outputDir = generatedDoc
+	} else {
+		sourceDir = restSourceDocDir
+		inputs.dir restDocSnippetsDir
+		backends = [ 'html5', 'pdf' ]
+		attributes = [
+			snippets: restDocSnippetsDir
+		]
+		outputDir = restDocGeneratedDir
+	}
+}
+
+jar {
+	//baseName = 'whatareyou'
+	dependsOn asciidoctor
+	
+	def docref
+	if ( restDocSnippetsDir == null ) {
+		docref = generatedDoc
+	} else {
+		docref = restDocGeneratedDir
+	}
+	from ("${docref}/html5") {
+		into 'static/docs'
+	}
+	from ("${docref}/pdf") {
+		into 'static/docs'
+	}
+}
+
+bootRun {
+	jvmArgs = [ "-Xms1g", "-Xmx1g", "-Xss256k" ]
+}
