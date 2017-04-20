@@ -20,13 +20,13 @@ public class QStore extends EntityPathBase<Store> {
 
     public static final QStore store = new QStore("store");
 
-    public final DateTimePath<java.util.Date> createdAt = createDateTime("createdAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final DateTimePath<java.util.Date> lastUpdateDate = createDateTime("lastUpdateDate", java.util.Date.class);
 
     public final NumberPath<Long> likeCount = createNumber("likeCount", Long.class);
 
-    public final DateTimePath<java.util.Date> modifiedAt = createDateTime("modifiedAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = createDateTime("modifiedAt", java.time.LocalDateTime.class);
 
     public final BooleanPath onEvent = createBoolean("onEvent");
 

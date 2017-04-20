@@ -34,7 +34,7 @@ public class StoreValueController {
 	
 	
 	/**
-	 * 가치 산정은 수행 시간이 느릴수 있기 때문에 Callable를 사용하여 Async 하게 수행한다. 
+	 * 가치 산정은 수행 시간이 오래 걸릴 수  있기 때문에 Callable를 사용하여 Async 하게 수행한다. 
 	 */
 	@ApiOperation(value = "상점 가치 산정을 요청한다.")
     @ApiResponses(value = { 

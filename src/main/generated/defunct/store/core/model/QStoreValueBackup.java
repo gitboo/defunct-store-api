@@ -19,9 +19,9 @@ public class QStoreValueBackup extends EntityPathBase<StoreValueBackup> {
 
     public static final QStoreValueBackup storeValueBackup = new QStoreValueBackup("storeValueBackup");
 
-    public final DateTimePath<java.util.Date> createdAt = createDateTime("createdAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.util.Date> modifiedAt = createDateTime("modifiedAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = createDateTime("modifiedAt", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> storeId = createNumber("storeId", Long.class);
 
