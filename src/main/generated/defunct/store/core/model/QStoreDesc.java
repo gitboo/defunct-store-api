@@ -22,11 +22,11 @@ public class QStoreDesc extends EntityPathBase<StoreDesc> {
 
     public static final QStoreDesc storeDesc = new QStoreDesc("storeDesc");
 
-    public final DateTimePath<java.util.Date> createdAt = createDateTime("createdAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final StringPath desciption = createString("desciption");
 
-    public final DateTimePath<java.util.Date> modifiedAt = createDateTime("modifiedAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = createDateTime("modifiedAt", java.time.LocalDateTime.class);
 
     public final QStore store;
 

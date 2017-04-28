@@ -10,12 +10,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -28,6 +31,11 @@ import defunct.store.core.repository.StoreValueRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+
+@EnableJpaAuditing
+@EntityScan(
+        basePackageClasses = {Jsr310JpaConverters.class},
+        basePackages = {"defunct.store.core.model"})
 public class StoreRepositoryTest {
 
 	@Autowired
@@ -69,7 +77,8 @@ public class StoreRepositoryTest {
 	}
 
 	@Test
-	@Ignore
+	//@Ignore
+	@Transactional
 	public void createStore() {
 
 		Store store = storeRepository.save(Store.builder().lastUpdateDate(new Date()).storeType(StoreType.M)

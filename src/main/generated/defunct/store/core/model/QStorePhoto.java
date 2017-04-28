@@ -22,9 +22,9 @@ public class QStorePhoto extends EntityPathBase<StorePhoto> {
 
     public static final QStorePhoto storePhoto = new QStorePhoto("storePhoto");
 
-    public final DateTimePath<java.util.Date> createdAt = createDateTime("createdAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.util.Date> modifiedAt = createDateTime("modifiedAt", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = createDateTime("modifiedAt", java.time.LocalDateTime.class);
 
     public final StringPath photoUrl = createString("photoUrl");
 

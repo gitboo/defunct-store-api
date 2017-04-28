@@ -1,7 +1,6 @@
 package defunct.store.core.service.dto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -48,8 +47,8 @@ public class StoreDto {
 	private StoreValueDto storeValue;
 
 	@JsonSerialize(using = ISO8601DateSerializer.class)
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 	@JsonSerialize(using = ISO8601DateSerializer.class)
-	private Date modifiedAt;
+	private LocalDateTime modifiedAt;
 }

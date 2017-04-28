@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.google.common.collect.Lists;
 
@@ -45,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @ToString(exclude = { "storePhotos", "storeDescs", "storeValues" })
 @Entity
 @Table(name = "STORE")
+@EntityListeners(AuditingEntityListener.class)
 public class Store  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -82,11 +85,12 @@ public class Store  implements Serializable {
 	private Date lastUpdateDate;
 	
 	@CreatedDate
-	@Column(name = "CREATED_AT", nullable = false)
+	@Column(name = "CREATED_AT", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
 	@Column(name = "MODIFIED_AT", nullable = false)
+	 
 	private LocalDateTime modifiedAt;
 	
 	@OneToMany(mappedBy = "store", cascade = { CascadeType.PERSIST }, orphanRemoval = true)
