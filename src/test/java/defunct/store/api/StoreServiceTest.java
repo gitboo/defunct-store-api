@@ -87,8 +87,10 @@ public class StoreServiceTest {
 	}
 	
 	
+
+
 	@Test
-	//@Ignore
+	@Ignore
 	@Transactional(readOnly = true)
 	public void showStoresTest() throws Exception {
 		

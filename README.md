@@ -6,7 +6,7 @@ Windows 10, STS, jdk8, gradle 3.3, Spring-boot 1.4, springfox 2.6, lombok, Model
 Windows 10, STS, jdk8, gradle 3.3, Spring-boot 1.4, springfox 2.6
 
 ## API 리스트
-![](https://raw.githubusercontent.com/gitboo/defunct-store-api/master/static/apis.png)
+![](https://raw.githubusercontent.com/gitboo/defunct-store-api/master/static/apis.jpg)
 
 ## Database diagram
 ![](https://raw.githubusercontent.com/gitboo/defunct-store-api/master/static/diagram.png)
