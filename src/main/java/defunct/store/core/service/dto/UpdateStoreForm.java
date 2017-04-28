@@ -4,11 +4,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 
 import defunct.store.core.model.type.StoreType;
@@ -38,7 +38,7 @@ public class UpdateStoreForm {
 		return true;
 	}
 	@JsonIgnore
-	public String toJson() throws JsonProcessingException {
-		return new ObjectMapper().writeValueAsString(this);
+	public String toJsonString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 }

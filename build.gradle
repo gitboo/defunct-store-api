@@ -1,8 +1,8 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.3.RELEASE'
-		asciidoctorVersion = '1.5.3'
-		springCDCVerifierVersion = '1.0.1.RELEASE'
+		springBootVersion = '1.5.2.RELEASE'
+		springfoxVersion = '2.6.1'
+		querydslVersion = '4.1.4'
 	}
 	repositories {
 		mavenCentral()
@@ -12,8 +12,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath group: 'org.asciidoctor', name: 'asciidoctor-gradle-plugin', version: asciidoctorVersion
-		classpath group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.0-alpha.11'
 	}
 }
 
@@ -28,16 +26,8 @@ apply plugin: 'maven'
 apply plugin: 'java' 
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'distribution'
 apply plugin: 'maven-publish'
-
-
-ext {
-	springfoxVersion = '2.6.1'
-	springRestDocVersion = '1.1.2.RELEASE'
-	springCDCVerifierVersion = '1.0.1.RELEASE'
-}
 
 repositories {
     mavenCentral()
@@ -64,24 +54,25 @@ compileTestJava {
 }
 
 dependencies {
+	// spring
 	compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
-	compile("org.springframework:spring-jdbc")
+	compile group: 'org.springframework', name: 'spring-jdbc'
+	
+	// db
 	compile group: 'com.h2database', name: 'h2'
-	
-	compile 'com.querydsl:querydsl-apt:4.1.4'
-    compile 'com.querydsl:querydsl-jpa:4.1.4'
-    compile 'org.modelmapper:modelmapper:0.7.5'
+	compile group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
+    compile group: 'com.querydsl', name: 'querydsl-jpa', version: querydslVersion
     
-	
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	
+	// test
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: springfoxVersion
-    compile group: 'io.springfox', name: 'springfox-staticdocs', version: springfoxVersion
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfoxVersion
-    compile group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: springRestDocVersion
-	
+    
+    // util
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
+    compileOnly group: 'org.projectlombok', name: 'lombok'
 	compile group: 'commons-io', name: 'commons-io', version:'2.5'
     compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.5'
     compile group: 'org.apache.commons', name: 'commons-collections4', version:'4.1'
@@ -89,7 +80,7 @@ dependencies {
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5') {
 		exclude(module: 'commons-logging')
     }
-    compileOnly('org.projectlombok:lombok')
+    
 }
 springBoot {
 	mainClass = 'defunct.store.Application'
@@ -123,65 +114,6 @@ compileJava {
 
 clean.doLast {
     file(new File(projectDir, "/src/main/generated")).deleteDir()
-}
-
-
-ext {
-	sourceDocDir = file('src/docs')
-    generatedAsciidoc = file('build/docs/asciidoc/generated')
-    generatedDoc = file('build/docs')
-    
-    restSourceDocDir = file('src/docs/restdoc')
-    restDocSnippetsDir = file('build/generated-snippets')
-    restDocGeneratedDir = file('build/restdocs')
-}
-
-asciidoctor {
-	dependsOn test
-	if ( restDocSnippetsDir == null ) {
-		sourceDir = sourceDocDir
-		sources {
-			include 'index.adoc'
-		}
-		backends = [ 'html5', 'pdf' ]
-		attributes = [
-			doctype: 'book',
-			toc: 'left',
-			toclevels: '2',
-			numbered: '',
-			sectlinks: '',
-			sectanchors: '',
-			hardbreaks: '',
-			generated: generatedAsciidoc
-	    ]
-		outputDir = generatedDoc
-	} else {
-		sourceDir = restSourceDocDir
-		inputs.dir restDocSnippetsDir
-		backends = [ 'html5', 'pdf' ]
-		attributes = [
-			snippets: restDocSnippetsDir
-		]
-		outputDir = restDocGeneratedDir
-	}
-}
-
-jar {
-	//baseName = 'whatareyou'
-	dependsOn asciidoctor
-	
-	def docref
-	if ( restDocSnippetsDir == null ) {
-		docref = generatedDoc
-	} else {
-		docref = restDocGeneratedDir
-	}
-	from ("${docref}/html5") {
-		into 'static/docs'
-	}
-	from ("${docref}/pdf") {
-		into 'static/docs'
-	}
 }
 
 bootRun {

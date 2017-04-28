@@ -100,7 +100,7 @@ public class StoreController {
 	public StoreDto updateStore(
 			@PathVariable(value = "storeId", required = true) Long storeId,
 			@ApiParam(name = "body", value = "input parameters in json form") @Valid @RequestBody UpdateStoreForm storeForm) throws JsonProcessingException {
-		log.info("Update store[id={}][{}]", storeId, storeForm.toJson());
+		log.info("Update store[id={}][{}]", storeId, storeForm.toJsonString());
 		return storeService.updateStore(storeId,storeForm);
 	}
 	

@@ -57,7 +57,7 @@ public class StoreControllerTest {
 		
 		given(storeService.findStore(storeId)).willReturn(StoreDto.builder().storeId(storeId).storeName("updateTest").build());
 		mvc.perform(put("/stores/{id}", storeId)
-				.content(storeForm.toJson())
+				.content(storeForm.toJsonString())
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andDo(print())
