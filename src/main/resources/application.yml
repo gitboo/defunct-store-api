@@ -25,6 +25,9 @@ spring:
       ddl-auto: none
       naming: 
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      
+
+
         
 #
 # logging for logback (logback.xml)

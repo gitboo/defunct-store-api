@@ -71,6 +71,7 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfoxVersion
     
     // util
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.7.4'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
     compileOnly group: 'org.projectlombok', name: 'lombok'
 	compile group: 'commons-io', name: 'commons-io', version:'2.5'

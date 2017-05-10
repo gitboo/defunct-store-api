@@ -3,10 +3,7 @@ package defunct.store.core.service.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import defunct.store.core.model.type.StoreType;
-import defunct.store.web.support.ISO8601DateSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +34,6 @@ public class StoreDto {
 
 	private StoreType storeType;
 
-	@JsonSerialize(using = ISO8601DateSerializer.class)
 	private LocalDateTime lastUpdateDate;
 
 	private List<StoreDescDto> description;
@@ -46,9 +42,7 @@ public class StoreDto {
 
 	private StoreValueDto storeValue;
 
-	@JsonSerialize(using = ISO8601DateSerializer.class)
 	private LocalDateTime createdAt;
 
-	@JsonSerialize(using = ISO8601DateSerializer.class)
 	private LocalDateTime modifiedAt;
 }
